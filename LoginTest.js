@@ -1,65 +1,69 @@
 
-describe('My First Test', function () {
+describe('Login page test', function () {
   beforeEach(function () {
-    cy.visit('https://app.clickup.com/login')
+    //Open login page before any test
+    cy.visit('login')
   })
 
-  it('Empty UserName And Password', function () {
-    cy.log('Login Without Entering UserName And Password')
+  it('Login with empty username and password', function () {
+    cy.log('Login without entering userName and password')
     cy.get('#login-submit').click()
     cy.get('#email-error-text').should('contain', 'This field is required!')
   })
 
-  it(' email does not exist in the system ', function () {
+  it(' Login with email does not exist in the system ', function () {
     cy.log('Login with email does not exist in the system')
     cy.login('noorelazab4@gmail.com', '123456')
     cy.get('#email-error-text').should('contain', 'This email does not exist in our system!')
   })
 
-  it('Invalid UserName ', function () {
-    cy.log('Login With Invalid UserName')
+  it('Login with invalid username ', function () {
+    cy.log('Login with invalid username')
     cy.login('noor', '123456')
     cy.get('#email-error-text').should('contain', 'This email is invalid!')
   })
 
-  it('Correct UserName And Wrong Password', function () {
+  it('Login with correct username and wrong password', function () {
     cy.log('Login With Correct UserName And Wrong Password')
     cy.login('noorelazab5@gmail.com', '123456')
     cy.get('.cu-form__error-text').should('contain', 'Incorrect password for this email.')
   })
- 
-  it('Enter UserName Only', function () {
-    cy.log('Login With Entering Nth Into Password Field' )
-    cy.get('#email-input').type('noorelazab5@gmail.com{enter}').should('have.value','noorelazab5@gmail.com')
-    //cy.get('#login-submit').click()
-    cy.get('#password-error-text').should('contain', 'Password required!')
+
+  it('Login with entering  username only', function () {
+    cy.log('Login with enter nothing into password field')
+    cy.get('#email-input').type('noorelazab5@gmail.com').should('have.value', 'noorelazab5@gmail.com')
+    cy.get('#login-submit').click()
+    cy.get('#password-error-text').should('contain', 'This field is required!')
   })
 
-  it('Enter Password Only', function () {
-    cy.log('Login With Entering Nth Into UserName Field And Enter Any Password' )
-    cy.get('#password-input').type('123456').should('have.value','123456')
+  it('Login with entering password only', function () {
+    cy.log('Login with enter nothing into username field and enter any password')
+    cy.get('#password-input').type('123456').should('have.value', '123456')
     cy.get('#login-submit').click()
     cy.get('#email-error-text').should('contain', 'This field is required!')
   })
 
-  it('Password less than 6 characters', function () {
-    cy.log('Login with Entering Password Less Than 6 Characters')
+  it('Login with password less than 6 characters', function () {
+    cy.log('Login with entering password less than 6 Characters')
     cy.login('noorelazab5@gmail.com', '123')
-   
     cy.get('#password-error-text.cu-form__error-text').should('contain', 'Password must be 6 characters or longer!')
   })
 
-  it('Correct Username And Password', function () {
-    cy.log('Login with Correct User Name And Correct Password')
-    cy.login('noorelazab5@gmail.com', 'noor1371312')
-    cy.wait(5000);
-    // cy.location('pathname', { timeout: 60000 })
-    //   .should('include', '/newPage');
-    cy.get('.create-task-button__new-task').click()
+  it('Login with correct username and password', function () {
+    cy.log('Login with correct user name and correct password')
+    //Get username and password from json file 
+    cy.fixture('Login').as('userFixture');
+    cy.get('@userFixture').then(user => {
+      cy.get('#email-input').type(user.username);
+      cy.get('#password-input').type(user.password);
+      cy.get('#login-submit').click()
+      cy.wait(5000);
+
+    })
   })
 
   it('Check Forget Password', function () {
-    cy.log('Click in Forgot Password Link ')
+    cy.log('Click in forgot password link ')
     cy.get('#login-forgot').click()
     cy.get('#forgot-password-input').type('noorelazab5@gmail.com')
     cy.get('.cu-btn').click()
@@ -67,4 +71,3 @@ describe('My First Test', function () {
   })
 
 })
-

@@ -1,21 +1,26 @@
-describe('My First Test', function () {
+describe('Projects Test', function () {
 
   beforeEach(function () {
+    //login to the project page before start testing
     cy.log('Login before eche Test')
-    cy.visit('https://app.clickup.com/login')
-    cy.login('noorelazab5@gmail.com', 'noor1371312')
-    cy.wait(10000)
+    cy.visit('login')
+    cy.fixture('Login').as('userFixture');
+    cy.get('@userFixture').then(user => {
+      cy.get('#email-input').type(user.username);
+      cy.get('#password-input').type(user.password);
+      cy.get('#login-submit').click()
+      cy.wait(5000);
   })
-
-  it('Add New project', () => {
-    cy.log('Adding New Project')
+  })
+  it('Add new project', () => {
+    cy.log('Adding new project')
     cy.get('.sidebar-section__name .nav-category__plus').click({ force: true })
     cy.get('.cu-form__input').type('project{enter}').should('have.value', 'project')
 
   })
 
-  it('Add exist Project', () => {
-    cy.log('Adding Exist Project')
+  it('Add exist project', () => {
+    cy.log('Adding exist project')
     cy.get('.sidebar-section__name .nav-category__plus').click({ force: true })
     cy.get('.cu-form__input').type('project{enter}').should('have.value', 'project')
     cy.get('.cu-form__error .cu-form__error-text').should('contain', 'Project name taken')
@@ -23,15 +28,15 @@ describe('My First Test', function () {
   })
 
 
-  it('Add New list', () => {
-    cy.log('Adding New List To Some Project')
+  it('Add new list', () => {
+    cy.log('Adding new list to some project')
     cy.get('.nav-category_open .nav-category__plus').click()
     cy.get('.ng-star-inserted .nav-section-maker__input').type('noor{enter}').should('have.value', 'noor')
 
 
   })
   it('Add exist list', () => {
-    cy.log('Adding Exist List To Some Project')
+    cy.log('Adding exist list to some project')
     cy.get('.nav-category_open .nav-category__plus').click()
     cy.get('.ng-star-inserted .nav-section-maker__input').type('noor{enter}').should('have.value', 'noor')
     cy.get('.popover-content .cu-error-popover').should('contain', 'Whoops! A list already exists with this name.')
