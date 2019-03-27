@@ -1,16 +1,11 @@
-describe('Projects Test', function () {
+describe('Add new project test suite', function () {
 
   beforeEach(function () {
     //login to the project page before start testing
     cy.log('Login before eche Test')
     cy.visit('login')
-    cy.fixture('Login').as('userFixture');
-    cy.get('@userFixture').then(user => {
-      cy.get('#email-input').type(user.username);
-      cy.get('#password-input').type(user.password);
-      cy.get('#login-submit').click()
-      cy.wait(5000);
-  })
+    cy.login()
+  
   })
   it('Add new project', () => {
     cy.log('Adding new project')
