@@ -7,14 +7,14 @@ describe('Login page test', function () {
 
   it('Login with empty username and password', function () {
     cy.log('Login without entering userName and password')
-    cy.submit()  
+    cy.get('#login-form').submit() 
     cy.get('#email-error-text').should('contain', 'This field is required!')
   })
 
   it(' Login with email does not exist in the system ', function () {
     cy.log('Login with email does not exist in the system')
     cy.tryToLogin('noorelazab4@gmail.com', '123456')
-    cy.get('#email-error-text').should('contain', 'This email does not exist in our system!')
+    cy.get('.cu-form__error-text').should('contain', "Whoops! This email isn't registered.")
   })
 
   it('Login with invalid username ', function () {
@@ -32,14 +32,14 @@ describe('Login page test', function () {
   it('Login with entering  username only', function () {
     cy.log('Login with enter nothing into password field')
     cy.get('#email-input').type('noorelazab5@gmail.com').should('have.value', 'noorelazab5@gmail.com')
-    cy.submit()  
+    cy.get('#login-form').submit() 
     cy.get('#password-error-text').should('contain', 'This field is required!')
   })
 
   it('Login with entering password only', function () {
     cy.log('Login with enter nothing into username field and enter any password')
     cy.get('#password-input').type('123456').should('have.value', '123456')
-    cy.submit()  
+   cy.get('#login-form').submit() 
     cy.get('#email-error-text').should('contain', 'This field is required!')
   })
 
